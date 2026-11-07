@@ -160,6 +160,40 @@ validate_build_mode() {
     esac
 }
 
+
+#=====================
+
+setup_banner() {
+    local build_root="$1"
+    local banner_file="$build_root/package/base-files/files/etc/banner"
+    mkdir -p "$(dirname "$banner_file")"
+    local date_str="$(date '+%Y-%m-%d ')"   # 提前获取日期字符串
+
+    # 使用 << 'EOF' 禁用所有展开，但日期通过变量单独插入
+    cat > "$banner_file" << 'EOF'
+--------------------------------------------------------
+Welcome to...
+--------------------------------------------------------
+
+,--.    ,--.                                  
+|  |,-. `--',--,--,  ,---. ,--.,--.,--,--,--. 
+|     / ,--.|      \(  .-' |  ||  ||        | 
+|  \  \ |  ||  ||  |.-'  ')'  ''  '|  |  |  | 
+`--'`--'`--'`--''--'`----'  `----' `--`--`--'            
+                                                        
+--------------------------------------------------------
+  Firmware compiled by Kinsum @ DATE_PLACEHOLDER
+--------------------------------------------------------
+EOF
+
+    # 替换日期占位符
+    sed -i "s/DATE_PLACEHOLDER/$date_str/" "$banner_file"
+}
+
+#====================================
+
+
+
 if [[ $# -eq 0 ]]; then
     collect_supported_devs
 
