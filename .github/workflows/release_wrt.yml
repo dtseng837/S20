@@ -202,7 +202,7 @@ jobs:
             echo "Insufficient disk space: ${available_gb}G available, ${required_gb}G required" >&2
             exit 1
           fi
-          ./build.sh ${{ inputs.model }}
+          bash -x ./build.sh ${{ inputs.model }} 2>&1 | tail -200
 
       - name: Get Kernel Verion
         run: |
