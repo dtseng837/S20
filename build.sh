@@ -469,7 +469,7 @@ fi
 
 apply_config() {
     local fragment
-    local config_path="$BASE_PATH/../$BUILD_DIR/.config"
+    local config_path="$BASE_PATH/../$BUILD_DIR/.config"   # ← 补上这一行
 
     \cp -f "$CONFIG_FILE" "$config_path"
     cat "$BASE_PATH/deconfig/compile_base.config" >> "$config_path"
@@ -484,7 +484,6 @@ apply_config() {
 CONFIG_VERSION_DIST="KinWRT"
 CONFIG_VERSION_MANUFACTURER="Kinsum@$version_number"
 CONFIG_VERSION_NUMBER="$version_number"
-version_number="${version_number:-$(date +%Y%m%d)}"
 EOF
 }
 
