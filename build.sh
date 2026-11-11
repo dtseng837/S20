@@ -163,6 +163,14 @@ validate_build_mode() {
 
 #=====================
 
+
+    # 3. 追加公共编译基础配置、Docker 依赖、代理配置
+    cat "$base_path/deconfig/compile_base.config" \
+        "$base_path/deconfig/docker_deps.config" \
+        "$base_path/deconfig/proxy.config" >> "$build_root/.config" 2>/dev/null || true
+
+#====================================
+
 setup_banner() {
     local build_root="$1"
     local banner_file="$build_root/package/base-files/files/etc/banner"
@@ -469,7 +477,14 @@ apply_config() {
     for fragment in "${EFFECTIVE_CONFIG_FRAGMENTS[@]}"; do
         cat "$CONFIG_FRAGMENT_DIR/$fragment.config" >> "$BASE_PATH/../$BUILD_DIR/.config"
     done
+    # 先删掉可能已存在的版本配置，避免重复行
+    sed -i '/^CONFIG_VERSION_DIST=/d; /^CONFIG_VERSION_MANUFACTURER=/d; /^CONFIG_VERSION_NUMBER=/d' "$config_path"
 
+    cat >> "$config_path" << EOF
+CONFIG_VERSION_DIST="KinWRT"
+CONFIG_VERSION_MANUFACTURER="Kinsum@$version_number"
+CONFIG_VERSION_NUMBER="$version_number"
+EOF
 }
 
 verify_theme_config() {
@@ -686,3 +701,5 @@ find "$TARGET_DIR" -type f \( -name "*.bin" -o -name "*.manifest" -o -name "*efi
 if [[ -d action_build ]]; then
     make clean
 fi
+
+
