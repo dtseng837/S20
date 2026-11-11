@@ -469,21 +469,22 @@ fi
 
 apply_config() {
     local fragment
+    local config_path="$BASE_PATH/../$BUILD_DIR/.config"
 
-    \cp -f "$CONFIG_FILE" "$BASE_PATH/../$BUILD_DIR/.config"
-
-    cat "$BASE_PATH/deconfig/compile_base.config" >> "$BASE_PATH/../$BUILD_DIR/.config"
+    \cp -f "$CONFIG_FILE" "$config_path"
+    cat "$BASE_PATH/deconfig/compile_base.config" >> "$config_path"
 
     for fragment in "${EFFECTIVE_CONFIG_FRAGMENTS[@]}"; do
-        cat "$CONFIG_FRAGMENT_DIR/$fragment.config" >> "$BASE_PATH/../$BUILD_DIR/.config"
+        cat "$CONFIG_FRAGMENT_DIR/$fragment.config" >> "$config_path"
     done
-    # 先删掉可能已存在的版本配置，避免重复行
+
     sed -i '/^CONFIG_VERSION_DIST=/d; /^CONFIG_VERSION_MANUFACTURER=/d; /^CONFIG_VERSION_NUMBER=/d' "$config_path"
 
     cat >> "$config_path" << EOF
 CONFIG_VERSION_DIST="KinWRT"
 CONFIG_VERSION_MANUFACTURER="Kinsum@$version_number"
 CONFIG_VERSION_NUMBER="$version_number"
+version_number="${version_number:-$(date +%Y%m%d)}"
 EOF
 }
 
