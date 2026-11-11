@@ -473,18 +473,17 @@ apply_config() {
 
     \cp -f "$CONFIG_FILE" "$config_path"
     cat "$BASE_PATH/deconfig/compile_base.config" >> "$config_path"
-
     for fragment in "${EFFECTIVE_CONFIG_FRAGMENTS[@]}"; do
         cat "$CONFIG_FRAGMENT_DIR/$fragment.config" >> "$config_path"
     done
 
     sed -i '/^CONFIG_VERSION_DIST=/d; /^CONFIG_VERSION_MANUFACTURER=/d; /^CONFIG_VERSION_NUMBER=/d' "$config_path"
 
+    version_number="${version_number:-$(date +%Y%m%d)}"   # ← 移到 heredoc 外
     cat >> "$config_path" << EOF
 CONFIG_VERSION_DIST="KinWRT"
 CONFIG_VERSION_MANUFACTURER="Kinsum@$version_number"
 CONFIG_VERSION_NUMBER="$version_number"
-version_number="${version_number:-$(date +%Y%m%d)}"
 EOF
 }
 
