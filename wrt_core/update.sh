@@ -7,7 +7,7 @@ set -o errtrace
 error_handler() {
     local exit_code=$?
     echo "Error at ${BASH_SOURCE[1]:-update.sh}:${BASH_LINENO[0]}, command: '${BASH_COMMAND}'" >&2
-    exit "$exit_code"
+    exit "$exit_code
 }
 
 trap 'error_handler' ERR
